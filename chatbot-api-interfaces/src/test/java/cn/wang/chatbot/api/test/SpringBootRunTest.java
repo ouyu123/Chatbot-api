@@ -5,6 +5,15 @@ import cn.wang.chatbot.api.domain.zsxq.model.aggregates.UnAnsweredQuestionsAggre
 import cn.wang.chatbot.api.domain.zsxq.model.vo.Topics;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -44,6 +53,27 @@ public class SpringBootRunTest {
             zsxqApi.answer(groupId,cookie,topicId,text,false);
         }
 
+
+    }
+    @Test
+    public void chatGtp_test() throws IOException {
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost("https://api.chatanywhere.com.cn/v1/chat/completions");
+        post.addHeader("authorization"," Bearer sk-QRRmRR3WPIMLDjGKPNILXTGz5cQQUycEMyGGLjWaQk9tWD6J" );
+        post.addHeader("contentType","application/json");
+        String paramJson = "{\n" +
+                "  \"model\": \"gpt-3.5-turbo\",\n" +
+                "  \"messages\": [{\"role\": \"user\", \"content\": \"写一个冒泡排血\"}]\n" +
+                "}";
+        StringEntity stringEntity = new StringEntity(paramJson, ContentType.create("application/json", "UTF-8"));
+        post.setEntity(stringEntity);
+        CloseableHttpResponse response = httpClient.execute(post);
+        if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
+        {
+            String res = EntityUtils.toString(response.getEntity());
+            logger.info("返回的内容 {}", res);
+
+        }
 
     }
 }
