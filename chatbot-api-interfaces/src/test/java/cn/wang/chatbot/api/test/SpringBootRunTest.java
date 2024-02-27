@@ -1,5 +1,6 @@
 package cn.wang.chatbot.api.test;
 
+import cn.wang.chatbot.api.domain.ai.IOPenAI;
 import cn.wang.chatbot.api.domain.zsxq.ZsxqApi;
 import cn.wang.chatbot.api.domain.zsxq.model.aggregates.UnAnsweredQuestionsAggregates;
 import cn.wang.chatbot.api.domain.zsxq.model.vo.Topics;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +40,9 @@ public class SpringBootRunTest {
     private String cookie;
     @Resource
     private ZsxqApi zsxqApi;
+
+    @Resource
+    private IOPenAI openAI;
     @Test
     public void test_zsxqApi() throws IOException {
         UnAnsweredQuestionsAggregates unAnsweredQuestionsAggregates = zsxqApi.queryUnAnsweredQurestionTopicod(groupId, cookie);
@@ -75,5 +80,11 @@ public class SpringBootRunTest {
 
         }
 
+    }
+
+    @Test
+    public void Test_OpenAi() throws IOException {
+        String res = openAI.doChatGPT("写一个英语你好");
+        logger.info("返回结果{}",res);
     }
 }
