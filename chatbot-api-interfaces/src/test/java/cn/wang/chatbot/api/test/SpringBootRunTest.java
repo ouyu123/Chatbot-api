@@ -1,5 +1,6 @@
 package cn.wang.chatbot.api.test;
 
+import cn.wang.chatbot.api.application.job.ChatBotSchedule;
 import cn.wang.chatbot.api.domain.ai.IOPenAI;
 import cn.wang.chatbot.api.domain.zsxq.ZsxqApi;
 import cn.wang.chatbot.api.domain.zsxq.model.aggregates.UnAnsweredQuestionsAggregates;
@@ -43,6 +44,9 @@ public class SpringBootRunTest {
 
     @Resource
     private IOPenAI openAI;
+
+    @Resource
+    private ChatBotSchedule chatBotSchedule;
     @Test
     public void test_zsxqApi() throws IOException {
         UnAnsweredQuestionsAggregates unAnsweredQuestionsAggregates = zsxqApi.queryUnAnsweredQurestionTopicod(groupId, cookie);
@@ -86,5 +90,10 @@ public class SpringBootRunTest {
     public void Test_OpenAi() throws IOException {
         String res = openAI.doChatGPT("写一个英语你好");
         logger.info("返回结果{}",res);
+    }
+
+    @Test
+    public  void  Test_chatBotSchedule(){
+        chatBotSchedule.run();
     }
 }
